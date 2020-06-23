@@ -28,8 +28,15 @@ func Struct(rt reflect.Type, gens map[string]gopter.Gen) gopter.Gen {
 		}
 	}
 
-	buildStructType := reflect.FuncOf(fieldTypes, []reflect.Type{rt}, false)
-	unbuildStructType := reflect.FuncOf([]reflect.Type{rt}, fieldTypes, false)
+	var fts []reflect.Type
+	if len(fieldTypes) > 49 {
+		fts = fieldTypes[:49]
+	}else{
+		fts = fieldTypes
+	}
+
+	buildStructType := reflect.FuncOf(fts, []reflect.Type{rt}, false)
+	unbuildStructType := reflect.FuncOf([]reflect.Type{rt}, fts, false)
 
 	buildStructFunc := reflect.MakeFunc(buildStructType, func(args []reflect.Value) []reflect.Value {
 		result := reflect.New(rt)
